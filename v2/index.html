@@ -289,14 +289,41 @@
 
     noBtn.addEventListener("click", e => e.preventDefault());
 
-    /* ---------- YES CLICK ---------- */
-    yesBtn.addEventListener("click", () => {
+/* ---------- YES CLICK (PLAYFUL FLOW) ---------- */
+let yesClicked = false;
+const title = document.querySelector("h1");
+
+const playfulLines = [
+  "Are you sure? 👀",
+  "Hehe… no takebacks now 😌",
+  "You didn’t even hesitate 👀",
+  "That was suspiciously fast 😏",
+  "Okay okay… I like your confidence 😉",
+  "Alright then 😌"
+];
+
+yesBtn.addEventListener("click", () => {
+  if (yesClicked) return;
+  yesClicked = true;
+
+  let i = 0;
+  title.innerText = playfulLines[i];
+
+  const interval = setInterval(() => {
+    i++;
+    if (i < playfulLines.length) {
+      title.innerText = playfulLines[i];
+    } else {
+      clearInterval(interval);
       zone.style.display = "none";
-      hint.style.display = "none";     // HIDE THE HINT
+      hint.style.display = "none";
       result.style.display = "block";
       resizeConfettiCanvas();
       fullScreenConfetti();
-    });
+    }
+  }, 900);
+});
+
   </script>
 </body>
 </html>
