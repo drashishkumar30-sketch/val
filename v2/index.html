@@ -16,39 +16,59 @@ body{
   background:radial-gradient(circle at top,#ffeef6,#ffd6e7);
   font-family:system-ui,sans-serif;
   padding:16px;
+  overflow:hidden;
 }
 .card{
   width:min(720px,92vw);
   background:#ffffffcc;
-  padding:24px;
+  padding:26px;
   border-radius:22px;
   text-align:center;
   box-shadow:0 18px 60px rgba(0,0,0,.15);
 }
 .art{
-  width:220px;
-  margin:0 auto 14px;
+  width:280px; /* BIGGER TEDDY */
+  margin:0 auto 12px;
   display:block;
 }
 h1{
   font-size:clamp(22px,4vw,38px);
   min-height:3em;
 }
-.buttons{
-  margin-top:18px;
+.hint{
+  font-size:13px;
+  opacity:.7;
+  margin-top:6px;
+}
+.zone{
+  position:relative;
+  height:120px;
+  margin-top:14px;
 }
 button{
-  padding:14px 22px;
-  font-size:18px;
-  font-weight:700;
-  border-radius:999px;
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
   border:none;
+  border-radius:999px;
   cursor:pointer;
-  margin:8px;
   box-shadow:0 10px 24px rgba(0,0,0,.14);
+  -webkit-tap-highlight-color:transparent;
 }
-.yes{background:#ff3b7a;color:#fff;}
-.no{background:#e5e7eb;}
+.yes{
+  left:15%;
+  padding:18px 32px;
+  font-size:20px;
+  font-weight:800;
+  background:#ff3b7a;
+  color:white;
+}
+.no{
+  left:60%;
+  padding:10px 18px;
+  font-size:14px;
+  background:#e5e7eb;
+}
 .sticker{
   width:140px;
   margin:16px auto;
@@ -60,6 +80,9 @@ button{
   inset:0;
   pointer-events:none;
   z-index:999;
+}
+.result{
+  display:none;
 }
 </style>
 </head>
@@ -89,81 +112,90 @@ button{
 
 <img src="sticker.jpg" id="sticker" class="sticker">
 
-<div class="buttons" id="buttons">
-  <button class="yes" id="left">Fine</button>
-  <button class="no" id="right">Not fine</button>
+<div class="zone" id="zone">
+  <button class="yes" id="yesBtn">Fine</button>
+  <button class="no" id="noBtn">Not fine</button>
+</div>
+
+<div class="hint" id="hint">Hmm… that option looks a bit shy 😏</div>
+
+<div class="result" id="result">
+  <img src="https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif" width="260">
 </div>
 
 </div>
 
 <script>
 const text = document.getElementById("text");
-const left = document.getElementById("left");
-const right = document.getElementById("right");
-const buttons = document.getElementById("buttons");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const zone = document.getElementById("zone");
+const hint = document.getElementById("hint");
 const sticker = document.getElementById("sticker");
+const result = document.getElementById("result");
 
 const steps = [
-  { q:"Hey Yukti… how are you?", a:["Fine","Not fine"] },
-  { q:"Can I make it better?", a:["Maybe","Try"] },
-  { q:"Will you be my Valentine?", a:["Yes","Let’s see"] },
-  { q:"If you would have chosen “Let’s see”…", a:[] }
+  ["Hey Yukti… how are you?","Fine","Not fine"],
+  ["Can I make it better?","Maybe","Try"],
+  ["Will you be my Valentine?","Yes","Let’s see"],
+  ["If you would have chosen “Let’s see”…"]
 ];
 
-const playful = [
-  "Are you sure? 👀",
-  "Hehe… no takebacks now 😌",
-  "Okay okay… I like your confidence 😉"
-];
-
-let i = 0;
+let step = 0;
 
 function next(){
-  i++;
-
-  if(i < steps.length){
-    text.innerText = steps[i].q;
-
-    if(i === 3){
-      buttons.style.display = "none";
-      sticker.style.display = "block";
-
-      setTimeout(()=>{
-        sticker.style.display="none";
-        startPlayful();
-      },2400);
-      return;
+  step++;
+  if(step < steps.length){
+    text.innerText = steps[step][0];
+    if(steps[step].length > 1){
+      yesBtn.innerText = steps[step][1];
+      noBtn.innerText = steps[step][2];
+    } else {
+      zone.style.display="none";
+      hint.style.display="none";
+      sticker.style.display="block";
+      setTimeout(playfulFlow,2400);
     }
-
-    left.innerText = steps[i].a[0];
-    right.innerText = steps[i].a[1];
   }
 }
 
-left.onclick = next;
-right.onclick = next;
+yesBtn.onclick = next;
+noBtn.onclick = next;
 
-function startPlayful(){
-  let p = 0;
-  const timer = setInterval(()=>{
-    if(p < playful.length){
-      text.innerText = playful[p++];
+/* NO BUTTON RUN AWAY */
+zone.addEventListener("pointermove", e=>{
+  const b = noBtn.getBoundingClientRect();
+  const d = Math.hypot(
+    (b.left+b.width/2)-e.clientX,
+    (b.top+b.height/2)-e.clientY
+  );
+  if(d < 120){
+    noBtn.style.left = Math.random()*60 + "%";
+  }
+});
+
+function playfulFlow(){
+  sticker.style.display="none";
+  const lines=[
+    "Are you sure? 👀",
+    "Hehe… no takebacks now 😌",
+    "Okay okay… I like your confidence 😉"
+  ];
+  let i=0;
+  const timer=setInterval(()=>{
+    if(i<lines.length){
+      text.innerText=lines[i++];
     } else {
       clearInterval(timer);
+      result.style.display="block";
       launchConfetti();
     }
   },1400);
 }
 
-const confettiCanvas = document.getElementById("confetti");
-const confettiFx = confetti.create(confettiCanvas,{resize:true});
-
+const confettiFx = confetti.create(document.getElementById("confetti"),{resize:true});
 function launchConfetti(){
-  confettiFx({
-    particleCount:220,
-    spread:130,
-    origin:{y:0.6}
-  });
+  confettiFx({particleCount:200,spread:120,origin:{y:.6}});
 }
 </script>
 
