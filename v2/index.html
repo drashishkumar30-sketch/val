@@ -196,8 +196,47 @@ function next(){
   }
 }
 
-yesBtn.onclick = next;
-noBtn.onclick = next;
+function startTeasing(){
+  let i = 0;
+  const timer = setInterval(()=>{
+    if(i < teasing.length){
+      text.innerText = teasing[i++];
+    } else {
+      clearInterval(timer);
+      showFinalQuestion();
+    }
+  },2000);
+}
+
+function showFinalQuestion(){
+  step++;
+  text.innerText = steps[step][0];
+  zone.style.display = "block";
+  yesBtn.innerText = steps[step][1];
+  noBtn.innerText = steps[step][2];
+}
+
+function handleFinalClick(){
+  zone.style.display = "none";
+  hint.style.display = "none";
+  finish();
+}
+
+yesBtn.onclick = () => {
+  if(step === steps.length - 1){
+    handleFinalClick();
+  } else {
+    next();
+  }
+};
+
+noBtn.onclick = () => {
+  if(step === steps.length - 1){
+    handleFinalClick();
+  } else {
+    next();
+  }
+};
 
 zone.addEventListener("pointermove", e=>{
   const b = noBtn.getBoundingClientRect();
@@ -209,26 +248,6 @@ zone.addEventListener("pointermove", e=>{
     noBtn.style.left = Math.random()*60 + "%";
   }
 });
-
-function startTeasing(){
-  let i = 0;
-  const timer = setInterval(()=>{
-    if(i < teasing.length){
-      text.innerText = teasing[i++];
-    } else {
-      clearInterval(timer);
-      showFinalQuestion();
-    }
-  },2000); // 🔥 2 SECONDS AS REQUESTED
-}
-
-function showFinalQuestion(){
-  step++;
-  text.innerText = steps[step][0];
-  zone.style.display = "block";
-  yesBtn.innerText = steps[step][1];
-  noBtn.innerText = steps[step][2];
-}
 
 const confettiFx = confetti.create(document.getElementById("confetti"),{resize:true});
 
@@ -253,12 +272,6 @@ function finish(){
     if(Date.now() < end) requestAnimationFrame(fireworks);
   })();
 }
-
-yesBtn.addEventListener("click", ()=>{
-  if(step === steps.length - 1){
-    finish();
-  }
-});
 </script>
 
 </body>
