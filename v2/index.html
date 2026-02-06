@@ -167,30 +167,48 @@ let step = 0;
 
 function next(){
   step++;
-  if(step < steps.length){
-    text.innerText = steps[step][0];
 
-    if(steps[step].length > 1){
-      yesBtn.innerText = steps[step][1];
-      noBtn.innerText = steps[step][2];
-    } else {
-      zone.style.display="none";
-      hint.style.display="none";
-      if(step === 5){
-        teddy.classList.add("bounce","hug");
-        sticker.style.display="block";
-        setTimeout(()=>{
-          sticker.style.display="none";
-          startTeasing();
-        },3000);
-      }
-    }
+  // SAFETY CHECK
+  if(step >= steps.length) return;
+
+  text.innerText = steps[step][0];
+
+  // IF STEP HAS BUTTONS
+  if(steps[step].length > 1){
+    zone.style.display = "block";
+    yesBtn.innerText = steps[step][1];
+    noBtn.innerText = steps[step][2];
+    return;
+  }
+
+  // FROM HERE → NO BUTTON STEPS
+  zone.style.display = "none";
+  hint.style.display = "none";
+
+  // STEP: "Soch lo…"
+  if(step === 4){
+    setTimeout(() => {
+      next(); // AUTO MOVE FORWARD
+    }, 1200);
+    return;
+  }
+
+  // STEP: "Achi baat hai…"
+  if(step === 5){
+    teddy.classList.add("bounce","hug");
+    sticker.style.display = "block";
+
+    setTimeout(() => {
+      sticker.style.display = "none";
+      startTeasing();
+    }, 2800);
   }
 }
 
 yesBtn.onclick = next;
 noBtn.onclick = next;
 
+// NO BUTTON RUNS AWAY
 zone.addEventListener("pointermove", e=>{
   const b = noBtn.getBoundingClientRect();
   const d = Math.hypot(
@@ -203,10 +221,10 @@ zone.addEventListener("pointermove", e=>{
 });
 
 function startTeasing(){
-  let i=0;
-  const timer=setInterval(()=>{
-    if(i<teasing.length){
-      text.innerText=teasing[i++];
+  let i = 0;
+  const timer = setInterval(()=>{
+    if(i < teasing.length){
+      text.innerText = teasing[i++];
     } else {
       clearInterval(timer);
       finish();
@@ -217,8 +235,9 @@ function startTeasing(){
 const confettiFx = confetti.create(document.getElementById("confetti"),{resize:true});
 
 function finish(){
-  result.style.display="block";
+  result.style.display = "block";
   const end = Date.now() + 2600;
+
   (function frame(){
     confettiFx({
       particleCount:14,
@@ -227,7 +246,7 @@ function finish(){
       colors:["#ff4d7d","#ffd1e8","#ffffff"],
       origin:{x:Math.random(), y:Math.random()}
     });
-    if(Date.now()<end) requestAnimationFrame(frame);
+    if(Date.now() < end) requestAnimationFrame(frame);
   })();
 }
 </script>
