@@ -27,8 +27,8 @@ body{
   box-shadow:0 18px 60px rgba(0,0,0,.15);
 }
 .art{
-  width:340px;
-  margin:0 auto 10px;
+  width:380px;
+  margin:0 auto 12px;
   display:block;
   transition:transform .4s ease;
 }
@@ -37,10 +37,10 @@ body{
 }
 @keyframes bounce{
   from{transform:translateY(0)}
-  to{transform:translateY(-10px)}
+  to{transform:translateY(-14px)}
 }
 .hug{
-  transform:scale(1.03);
+  transform:scale(1.05);
 }
 h1{
   font-size:clamp(22px,4vw,38px);
@@ -59,18 +59,17 @@ button{
   border-radius:999px;
   cursor:pointer;
   box-shadow:0 10px 24px rgba(0,0,0,.14);
-  -webkit-tap-highlight-color:transparent;
 }
 .yes{
-  left:15%;
-  padding:18px 36px;
-  font-size:20px;
+  left:12%;
+  padding:20px 42px;
+  font-size:21px;
   font-weight:800;
   background:#ff3b7a;
   color:#fff;
 }
 .no{
-  left:60%;
+  left:62%;
   padding:10px 18px;
   font-size:14px;
   background:#e5e7eb;
@@ -82,7 +81,7 @@ button{
 }
 .sticker{
   width:150px;
-  margin:14px auto;
+  margin:16px auto;
   display:none;
   border-radius:14px;
 }
@@ -94,18 +93,13 @@ button{
   position:fixed;
   inset:0;
   pointer-events:none;
-  z-index:999;
+  z-index:9999;
 }
-audio{display:none;}
 </style>
 </head>
 
 <body>
 <canvas id="confetti"></canvas>
-
-<audio id="sound">
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-romantic-tone-2402.mp3">
-</audio>
 
 <div class="card">
 
@@ -137,12 +131,8 @@ audio{display:none;}
 <div class="hint" id="hint">No button thoda darr gaya lagta hai 😌</div>
 
 <div class="result" id="result">
-  <h2>YAY 🎉</h2>
-  <img
-    src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif"
-    width="260"
-    alt="celebration"
-  />
+  <h2>YAY! Maaru baby 😌✨<br>Wallah habibi, good choice 💛</h2>
+  <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" width="260">
 </div>
 
 </div>
@@ -156,7 +146,6 @@ const hint = document.getElementById("hint");
 const sticker = document.getElementById("sticker");
 const teddy = document.getElementById("teddy");
 const result = document.getElementById("result");
-const sound = document.getElementById("sound");
 
 const steps = [
   ["Hey Yukti… how are you?","Fine","Not fine"],
@@ -165,6 +154,13 @@ const steps = [
   ["Are you sure?","Yes","No"],
   ["Soch lo… last chance 😌"],
   ["Achi baat hai ki aap sure ho, huh 😌"]
+];
+
+const teasing = [
+  "You didn’t even take a second… interesting 👀",
+  "That level of confidence is a little dangerous 😏",
+  "Good thing I’m prepared, or I’d be blushing already 😌",
+  "Alright… now it’s my turn to smile."
 ];
 
 let step = 0;
@@ -180,13 +176,14 @@ function next(){
     } else {
       zone.style.display="none";
       hint.style.display="none";
-      teddy.classList.add("bounce","hug");
-      sticker.style.display="block";
-
-      setTimeout(()=>{
-        sticker.style.display="none";
-        finish();
-      },3000);
+      if(step === 5){
+        teddy.classList.add("bounce","hug");
+        sticker.style.display="block";
+        setTimeout(()=>{
+          sticker.style.display="none";
+          startTeasing();
+        },3000);
+      }
     }
   }
 }
@@ -205,28 +202,33 @@ zone.addEventListener("pointermove", e=>{
   }
 });
 
-function finish(){
-  result.style.display="block";
-  sound.play();
-  launchConfetti();
+function startTeasing(){
+  let i=0;
+  const timer=setInterval(()=>{
+    if(i<teasing.length){
+      text.innerText=teasing[i++];
+    } else {
+      clearInterval(timer);
+      finish();
+    }
+  },1400);
 }
 
 const confettiFx = confetti.create(document.getElementById("confetti"),{resize:true});
-function launchConfetti(){
-  confettiFx({
-    particleCount:180,
-    spread:120,
-    shapes:["heart"],
-    scalar:1.2,
-    origin:{y:0.6}
-  });
-  confettiFx({
-    particleCount:120,
-    spread:180,
-    scalar:0.6,
-    colors:["#ff4d7d","#ffd1e8","#fff"],
-    origin:{y:0.2}
-  });
+
+function finish(){
+  result.style.display="block";
+  const end = Date.now() + 2600;
+  (function frame(){
+    confettiFx({
+      particleCount:14,
+      spread:180,
+      shapes:["heart"],
+      colors:["#ff4d7d","#ffd1e8","#ffffff"],
+      origin:{x:Math.random(), y:Math.random()}
+    });
+    if(Date.now()<end) requestAnimationFrame(frame);
+  })();
 }
 </script>
 
