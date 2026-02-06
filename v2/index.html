@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Just a Question</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Valentine 💖</title>
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 
@@ -13,263 +13,204 @@ body{
   min-height:100vh;
   display:grid;
   place-items:center;
-  background:radial-gradient(circle at top,#ffeef6,#ffd6e7);
+  background:linear-gradient(#ffe6f0,#ffd1e8);
   font-family:system-ui,sans-serif;
-  padding:16px;
   overflow:hidden;
 }
+
+#confetti{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  pointer-events:none;
+  z-index:99999;
+}
+
 .card{
-  width:min(720px,92vw);
-  background:#ffffffcc;
-  padding:28px;
-  border-radius:22px;
+  background:#ffffffdd;
+  backdrop-filter:blur(10px);
+  border-radius:24px;
+  padding:28px 20px;
+  width:min(720px,94vw);
   text-align:center;
-  box-shadow:0 18px 60px rgba(0,0,0,.15);
+  box-shadow:0 20px 60px rgba(0,0,0,.15);
 }
-.art{
-  width:380px;
-  margin:0 auto 12px;
-  display:block;
-  transition:transform .4s ease;
+
+.teddy{
+  width:260px;
+  margin:auto;
+  animation:bounce 1.8s infinite;
 }
-.bounce{
-  animation:bounce .8s ease infinite alternate;
-}
+
 @keyframes bounce{
-  from{transform:translateY(0)}
-  to{transform:translateY(-14px)}
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-14px)}
 }
-.hug{
-  transform:scale(1.05);
-}
-h1{
-  font-size:clamp(22px,4vw,38px);
-  min-height:3em;
-}
+
+h1{font-size:clamp(24px,4vw,36px)}
+p{font-size:18px}
+
 .zone{
   position:relative;
-  height:120px;
-  margin-top:16px;
+  height:160px;
+  margin-top:20px;
 }
+
 button{
   position:absolute;
   top:50%;
   transform:translateY(-50%);
   border:none;
   border-radius:999px;
-  cursor:pointer;
-  box-shadow:0 10px 24px rgba(0,0,0,.14);
-}
-.yes{
-  left:12%;
-  padding:20px 42px;
-  font-size:21px;
+  padding:16px 26px;
+  font-size:18px;
   font-weight:800;
-  background:#ff3b7a;
-  color:#fff;
+  cursor:pointer;
 }
-.no{
-  left:62%;
-  padding:10px 18px;
-  font-size:14px;
+
+#yes{
+  left:18%;
+  background:#ff3b7a;
+  color:white;
+  font-size:20px;
+}
+
+#no{
+  left:60%;
   background:#e5e7eb;
 }
+
 .hint{
-  font-size:13px;
+  font-size:14px;
   opacity:.7;
-  margin-top:6px;
+  margin-top:10px;
 }
-.sticker{
-  width:150px;
-  margin:16px auto;
+
+#result{
   display:none;
-  border-radius:14px;
+  margin-top:20px;
 }
-.result{
-  display:none;
-  margin-top:16px;
-}
-#confetti{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:9999;
+
+.gif{
+  width:min(360px,90%);
+  border-radius:16px;
 }
 </style>
 </head>
 
 <body>
+
 <canvas id="confetti"></canvas>
 
 <div class="card">
+  <img class="teddy" src="https://i.imgur.com/4AiXzf8.png" />
 
-<!-- TEDDY -->
-<svg class="art" id="teddy" viewBox="0 0 300 260" xmlns="http://www.w3.org/2000/svg">
-  <path d="M150 60 C150 40 180 40 180 65
-           C180 95 150 105 150 120
-           C150 105 120 95 120 65
-           C120 40 150 40 150 60Z" fill="#ff4d7d"/>
-  <circle cx="150" cy="155" r="65" fill="#d2a679"/>
-  <circle cx="105" cy="105" r="22" fill="#d2a679"/>
-  <circle cx="195" cy="105" r="22" fill="#d2a679"/>
-  <circle cx="135" cy="150" r="5"/>
-  <circle cx="165" cy="150" r="5"/>
-  <circle cx="150" cy="165" r="6" fill="#5b3a1e"/>
-  <path d="M138 175 Q150 185 162 175"
-        stroke="#5b3a1e" stroke-width="3" fill="none"/>
-</svg>
+  <h1 id="text"></h1>
 
-<h1 id="text">Hey Yukti… how are you?</h1>
+  <div class="zone" id="zone">
+    <button id="yes"></button>
+    <button id="no"></button>
+  </div>
 
-<img src="sticker.jpg" id="sticker" class="sticker">
+  <div class="hint" id="hint">The other option seems a bit shy 😏</div>
 
-<div class="zone" id="zone">
-  <button class="yes" id="yesBtn">Fine</button>
-  <button class="no" id="noBtn">Not fine</button>
-</div>
-
-<div class="hint" id="hint">The other option seems a bit shy 😏</div>
-
-<div class="result" id="result">
-  <h2>YAY! Maaru baby 😌✨<br>Wallah habibi, good choice 💛</h2>
-  <img src="https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif" width="260">
-</div>
-
+  <div id="result">
+    <h1>
+      YAY! Maaru baby 😌✨<br>
+      Wallah habibi, good choice 💛
+    </h1>
+    <img class="gif" src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif">
+  </div>
 </div>
 
 <script>
-const text = document.getElementById("text");
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-const zone = document.getElementById("zone");
-const hint = document.getElementById("hint");
-const sticker = document.getElementById("sticker");
-const teddy = document.getElementById("teddy");
-const result = document.getElementById("result");
-
 const steps = [
-  ["Hey Yukti… how are you?","Fine","Not fine"],
-  ["Can I make it better?","Maybe","Try"],
-  ["Will you be my Valentine?","Yes","Let’s see"],
-  ["Are you sure?","Yes","No"],
-  ["Soch lo… last chance 😌"],
-  ["Achi baat hai ki aap sure ho, huh 😌"],
-  ["One last time…\nMrs. Yukti Kotak, will you be my Valentine?","Haanji baby","Akcueiwjsoqkw"]
-];
-
-const teasing = [
-  "You didn’t even take a second… interesting 👀",
-  "That level of confidence is a little dangerous 😏",
-  "Good thing I’m prepared, or I’d be blushing already 😌",
-  "Alright… now it’s my turn to smile."
+  ["How are you feeling today?","Good","Not good"],
+  ["Should I make you smile today?","Yes obviously","Maybe"],
+  ["Do you like surprises?","Love them","Depends"],
+  ["Soch lo…","Okay","Try again"],
+  ["One last time… Mrs. Yukti Kotak, will you be my Valentine?","Haanji baby","Akcueiwjsoqkw"]
 ];
 
 let step = 0;
 
-function next(){
-  step++;
-  if(step >= steps.length) return;
+const text = document.getElementById("text");
+const yes = document.getElementById("yes");
+const no = document.getElementById("no");
+const zone = document.getElementById("zone");
+const hint = document.getElementById("hint");
+const result = document.getElementById("result");
 
-  text.innerText = steps[step][0];
+function show(){
+  text.innerHTML = steps[step][0];
+  yes.textContent = steps[step][1];
+  no.textContent = steps[step][2];
+}
+show();
 
-  if(steps[step].length > 1){
-    zone.style.display = "block";
-    yesBtn.innerText = steps[step][1];
-    noBtn.innerText = steps[step][2];
-    return;
-  }
+/* runaway logic */
+function run(px,py){
+  const z = zone.getBoundingClientRect();
+  const b = no.getBoundingClientRect();
 
-  zone.style.display = "none";
+  let dx = (b.left+b.width/2)-px;
+  let dy = (b.top+b.height/2)-py;
+  let m = Math.hypot(dx,dy)||1;
+  dx/=m; dy/=m;
 
-  if(step === 4){
-    setTimeout(next, 1200);
-    return;
-  }
+  let nl = (b.left-z.left)+dx*140;
+  let nt = (b.top-z.top)+dy*140;
 
-  if(step === 5){
-    teddy.classList.add("bounce","hug");
-    sticker.style.display = "block";
-    setTimeout(()=>{
-      sticker.style.display = "none";
-      startTeasing();
-    },3000);
-  }
+  nl=Math.max(0,Math.min(z.width-b.width,nl));
+  nt=Math.max(0,Math.min(z.height-b.height,nt));
+
+  no.style.left = nl+"px";
+  no.style.top = nt+"px";
 }
 
-function startTeasing(){
-  let i = 0;
-  const timer = setInterval(()=>{
-    if(i < teasing.length){
-      text.innerText = teasing[i++];
-    } else {
-      clearInterval(timer);
-      showFinalQuestion();
-    }
-  },2000);
-}
-
-function showFinalQuestion(){
-  step++;
-  text.innerText = steps[step][0];
-  zone.style.display = "block";
-  yesBtn.innerText = steps[step][1];
-  noBtn.innerText = steps[step][2];
-}
-
-function handleFinalClick(){
-  zone.style.display = "none";
-  hint.style.display = "none";
-  finish();
-}
-
-yesBtn.onclick = () => {
-  if(step === steps.length - 1){
-    handleFinalClick();
-  } else {
-    next();
-  }
-};
-
-noBtn.onclick = () => {
-  if(step === steps.length - 1){
-    handleFinalClick();
-  } else {
-    next();
-  }
-};
-
-zone.addEventListener("pointermove", e=>{
-  const b = noBtn.getBoundingClientRect();
-  const d = Math.hypot(
+zone.addEventListener("pointermove",e=>{
+  const b=no.getBoundingClientRect();
+  const d=Math.hypot(
     (b.left+b.width/2)-e.clientX,
     (b.top+b.height/2)-e.clientY
   );
-  if(d < 120){
-    noBtn.style.left = Math.random()*60 + "%";
-  }
+  if(d<140) run(e.clientX,e.clientY);
 });
 
-const confettiFx = confetti.create(document.getElementById("confetti"),{resize:true});
+function next(){
+  step++;
+  if(step>=steps.length){
+    finish();
+  }else{
+    show();
+  }
+}
+
+yes.onclick = ()=>{
+  if(step===steps.length-1){
+    finish();
+  }else{
+    next();
+  }
+};
+no.onclick = e=>e.preventDefault();
+
+/* FULL SCREEN CONFETTI */
+const canvas = document.getElementById("confetti");
+const fx = confetti.create(canvas,{resize:true,useWorker:true});
 
 function finish(){
-  result.style.display = "block";
-  const end = Date.now() + 2600;
+  zone.style.display="none";
+  hint.style.display="none";
+  result.style.display="block";
 
-  (function fireworks(){
-    confettiFx({
-      particleCount:14,
-      spread:120,
-      startVelocity:45,
-      ticks:200,
-      gravity:0.9,
-      shapes:["heart"],
-      colors:["#ff4d7d","#ffd1e8","#ffffff"],
-      origin:{
-        x:Math.random(),
-        y:Math.random()*0.6
-      }
-    });
-    if(Date.now() < end) requestAnimationFrame(fireworks);
+  const end = Date.now()+3000;
+  (function frame(){
+    fx({particleCount:10,angle:60,spread:70,origin:{x:0,y:.6}});
+    fx({particleCount:10,angle:120,spread:70,origin:{x:1,y:.6}});
+    fx({particleCount:14,spread:120,startVelocity:55,origin:{x:.5,y:.4}});
+    if(Date.now()<end) requestAnimationFrame(frame);
   })();
 }
 </script>
