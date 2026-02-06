@@ -128,7 +128,7 @@ button{
   <button class="no" id="noBtn">Not fine</button>
 </div>
 
-<div class="hint" id="hint">No button thoda darr gaya lagta hai 😌</div>
+<div class="hint" id="hint">The other option seems a bit shy 😏</div>
 
 <div class="result" id="result">
   <h2>YAY! Maaru baby 😌✨<br>Wallah habibi, good choice 💛</h2>
@@ -153,7 +153,8 @@ const steps = [
   ["Will you be my Valentine?","Yes","Let’s see"],
   ["Are you sure?","Yes","No"],
   ["Soch lo… last chance 😌"],
-  ["Achi baat hai ki aap sure ho, huh 😌"]
+  ["Achi baat hai ki aap sure ho, huh 😌"],
+  ["One last time…\nMrs. Yukti Kotak, will you be my Valentine?","Haanji baby","Akcueiwjsoqkw"]
 ];
 
 const teasing = [
@@ -167,13 +168,10 @@ let step = 0;
 
 function next(){
   step++;
-
-  // SAFETY CHECK
   if(step >= steps.length) return;
 
   text.innerText = steps[step][0];
 
-  // IF STEP HAS BUTTONS
   if(steps[step].length > 1){
     zone.style.display = "block";
     yesBtn.innerText = steps[step][1];
@@ -181,34 +179,26 @@ function next(){
     return;
   }
 
-  // FROM HERE → NO BUTTON STEPS
   zone.style.display = "none";
-  hint.style.display = "none";
 
-  // STEP: "Soch lo…"
   if(step === 4){
-    setTimeout(() => {
-      next(); // AUTO MOVE FORWARD
-    }, 1200);
+    setTimeout(next, 1200);
     return;
   }
 
-  // STEP: "Achi baat hai…"
   if(step === 5){
     teddy.classList.add("bounce","hug");
     sticker.style.display = "block";
-
-    setTimeout(() => {
+    setTimeout(()=>{
       sticker.style.display = "none";
       startTeasing();
-    }, 2800);
+    },3000);
   }
 }
 
 yesBtn.onclick = next;
 noBtn.onclick = next;
 
-// NO BUTTON RUNS AWAY
 zone.addEventListener("pointermove", e=>{
   const b = noBtn.getBoundingClientRect();
   const d = Math.hypot(
@@ -227,9 +217,17 @@ function startTeasing(){
       text.innerText = teasing[i++];
     } else {
       clearInterval(timer);
-      finish();
+      showFinalQuestion();
     }
-  },1400);
+  },2000); // 🔥 2 SECONDS AS REQUESTED
+}
+
+function showFinalQuestion(){
+  step++;
+  text.innerText = steps[step][0];
+  zone.style.display = "block";
+  yesBtn.innerText = steps[step][1];
+  noBtn.innerText = steps[step][2];
 }
 
 const confettiFx = confetti.create(document.getElementById("confetti"),{resize:true});
@@ -238,17 +236,29 @@ function finish(){
   result.style.display = "block";
   const end = Date.now() + 2600;
 
-  (function frame(){
+  (function fireworks(){
     confettiFx({
       particleCount:14,
-      spread:180,
+      spread:120,
+      startVelocity:45,
+      ticks:200,
+      gravity:0.9,
       shapes:["heart"],
       colors:["#ff4d7d","#ffd1e8","#ffffff"],
-      origin:{x:Math.random(), y:Math.random()}
+      origin:{
+        x:Math.random(),
+        y:Math.random()*0.6
+      }
     });
-    if(Date.now() < end) requestAnimationFrame(frame);
+    if(Date.now() < end) requestAnimationFrame(fireworks);
   })();
 }
+
+yesBtn.addEventListener("click", ()=>{
+  if(step === steps.length - 1){
+    finish();
+  }
+});
 </script>
 
 </body>
